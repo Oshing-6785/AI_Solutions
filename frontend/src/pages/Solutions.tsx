@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import API from "@/services/api";
 import { useNavigate } from "react-router-dom";
 
-
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ChatBot from "@/components/ChatBot";
@@ -13,7 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 
-// Update this import path as per your project structure
 import { iconMap } from "@/components/Dashboard/ContentTab/Solutions/iconMap";
 
 import FoldableDescription from "@/components/Dashboard/ContentTab/Solutions/FoldableDescription";
@@ -21,12 +19,22 @@ import FoldableFeatures from "@/components/Dashboard/ContentTab/Solutions/Foldab
 
 type UISolution = {
   _id: string;
-  icon: string; // key in iconMap (e.g., "Brain")
+  icon: string;
   title: string;
   description: string;
   features: string[];
   badge?: "" | "Popular" | "Featured" | "New" | "Enterprise";
   color?: "primary" | "secondary" | "accent";
+};
+
+const buildPrefillMessage = (s: UISolution) => {
+  const featuresText = (s.features || []).map((f) => `• ${f}`).join("\n");
+  return (
+    `I'm interested in "${s.title}".\n\n` +
+    `${s.description}\n\n` +
+    (featuresText ? `Key features:\n${featuresText}\n\n` : "") +
+    `Please contact me with pricing, timeline, and implementation details.`
+  );
 };
 
 const Solutions = () => {
@@ -156,10 +164,19 @@ const Solutions = () => {
                         />
                       </div>
                       <div className="mt-auto">
-                        <Link to="/contact">
-                          <Button variant="outline" className="w-full group">
+                        <Link
+                          to="/contact"
+                          state={{
+                            prefill: { message: buildPrefillMessage(solution) },
+                          }}
+                          replace
+                        >
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="w-full group"
+                          >
                             Learn More
-                            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                           </Button>
                         </Link>
                       </div>

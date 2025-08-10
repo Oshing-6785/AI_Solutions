@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import API from "../services/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ChatBot from "@/components/ChatBot";
@@ -21,8 +28,27 @@ const Contact = () => {
     company_name: "",
     country: "",
     job_title: "",
-    message: ""
+    message: "",
   });
+
+  const location = useLocation() as {
+    state?: { prefill?: { message?: string } };
+  };
+  const prefilledOnce = useRef(false);
+
+  useEffect(() => {
+    console.log("location.state:", location.state);
+    if (prefilledOnce.current) return;
+
+    const incoming = location?.state?.prefill;
+    if (incoming?.message) {
+      setFormData((prev) => ({
+        ...prev,
+        message: prev.message || incoming.message, // only set if empty
+      }));
+      prefilledOnce.current = true;
+    }
+  }, [location]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +59,8 @@ const Contact = () => {
       if (response.status === 200 || response.status === 201) {
         toast({
           title: "Request Submitted Successfully!",
-          description: "Our team will contact you within 24 hours to discuss your requirements.",
+          description:
+            "Our team will contact you within 24 hours to discuss your requirements.",
         });
 
         setFormData({
@@ -43,7 +70,7 @@ const Contact = () => {
           company_name: "",
           country: "",
           job_title: "",
-          message: ""
+          message: "",
         });
       } else {
         toast({
@@ -55,19 +82,31 @@ const Contact = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.response?.data?.message || "Something went wrong. Please try again.",
+        description:
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.",
         variant: "destructive",
       });
     }
   };
 
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const countries = [
-    "United Kingdom", "Nepal", "United States", "Canada", "Australia", "Germany",
-    "France", "Netherlands", "Sweden", "Norway", "Denmark", "Other"
+    "United Kingdom",
+    "Nepal",
+    "United States",
+    "Canada",
+    "Australia",
+    "Germany",
+    "France",
+    "Netherlands",
+    "Sweden",
+    "Norway",
+    "Denmark",
+    "Other",
   ];
 
   return (
@@ -84,8 +123,9 @@ const Contact = () => {
             </span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            Ready to transform your business with AI? Share your requirements with us and 
-            let our experts design a custom solution that drives real results.
+            Ready to transform your business with AI? Share your requirements
+            with us and let our experts design a custom solution that drives
+            real results.
           </p>
         </div>
       </section>
@@ -94,14 +134,16 @@ const Contact = () => {
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            
             {/* Contact Form */}
             <div className="lg:col-span-2">
               <Card className="shadow-elegant">
                 <CardHeader>
-                  <CardTitle className="text-2xl">Submit Your Requirements</CardTitle>
+                  <CardTitle className="text-2xl">
+                    Submit Your Requirements
+                  </CardTitle>
                   <p className="text-muted-foreground">
-                    No account required. Just tell us about your project and we'll get back to you with a tailored solution.
+                    No account required. Just tell us about your project and
+                    we'll get back to you with a tailored solution.
                   </p>
                 </CardHeader>
                 <CardContent>
@@ -123,7 +165,9 @@ const Contact = () => {
                           id="email"
                           type="email"
                           value={formData.email}
-                          onChange={(e) => handleChange("email", e.target.value)}
+                          onChange={(e) =>
+                            handleChange("email", e.target.value)
+                          }
                           placeholder="Enter your email"
                           required
                         />
@@ -136,7 +180,9 @@ const Contact = () => {
                         <Input
                           id="phone"
                           value={formData.phone}
-                          onChange={(e) => handleChange("phone", e.target.value)}
+                          onChange={(e) =>
+                            handleChange("phone", e.target.value)
+                          }
                           placeholder="Enter your phone number"
                         />
                       </div>
@@ -145,7 +191,9 @@ const Contact = () => {
                         <Input
                           id="company_name"
                           value={formData.company_name}
-                          onChange={(e) => handleChange("company_name", e.target.value)}
+                          onChange={(e) =>
+                            handleChange("company_name", e.target.value)
+                          }
                           placeholder="Enter your company name"
                           required
                         />
@@ -155,7 +203,12 @@ const Contact = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="country">Country *</Label>
-                        <Select value={formData.country} onValueChange={(value) => handleChange("country", value)}>
+                        <Select
+                          value={formData.country}
+                          onValueChange={(value) =>
+                            handleChange("country", value)
+                          }
+                        >
                           <SelectTrigger id="country">
                             <SelectValue placeholder="Select your country" />
                           </SelectTrigger>
@@ -173,7 +226,9 @@ const Contact = () => {
                         <Input
                           id="job_title"
                           value={formData.job_title}
-                          onChange={(e) => handleChange("job_title", e.target.value)}
+                          onChange={(e) =>
+                            handleChange("job_title", e.target.value)
+                          }
                           placeholder="Enter your job title"
                           required
                         />
@@ -185,14 +240,21 @@ const Contact = () => {
                       <Textarea
                         id="message"
                         value={formData.message}
-                        onChange={(e) => handleChange("message", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("message", e.target.value)
+                        }
                         placeholder="Please describe your project requirements, goals, and any specific challenges you're facing..."
                         rows={6}
                         required
                       />
                     </div>
 
-                    <Button type="submit" variant="hero" size="lg" className="w-full">
+                    <Button
+                      type="submit"
+                      variant="hero"
+                      size="lg"
+                      className="w-full"
+                    >
                       Submit Requirements
                     </Button>
                   </form>
@@ -211,8 +273,10 @@ const Contact = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    AI SOLUTIONS<br />
-                    Sunderland, United Kingdom<br />
+                    AI SOLUTIONS
+                    <br />
+                    Sunderland, United Kingdom
+                    <br />
                     Serving clients globally
                   </p>
                 </CardContent>
@@ -227,8 +291,10 @@ const Contact = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    We respond to all inquiries within 24 hours.<br />
-                    For urgent requests, expect a response within 4 hours during business days.
+                    We respond to all inquiries within 24 hours.
+                    <br />
+                    For urgent requests, expect a response within 4 hours during
+                    business days.
                   </p>
                 </CardContent>
               </Card>
@@ -243,15 +309,21 @@ const Contact = () => {
                 <CardContent className="space-y-3">
                   <div>
                     <p className="font-medium">General Inquiries</p>
-                    <p className="text-muted-foreground text-sm">info@ai-solutions.co.uk</p>
+                    <p className="text-muted-foreground text-sm">
+                      info@ai-solutions.co.uk
+                    </p>
                   </div>
                   <div>
                     <p className="font-medium">Technical Support</p>
-                    <p className="text-muted-foreground text-sm">support@ai-solutions.co.uk</p>
+                    <p className="text-muted-foreground text-sm">
+                      support@ai-solutions.co.uk
+                    </p>
                   </div>
                   <div>
                     <p className="font-medium">Partnerships</p>
-                    <p className="text-muted-foreground text-sm">partners@ai-solutions.co.uk</p>
+                    <p className="text-muted-foreground text-sm">
+                      partners@ai-solutions.co.uk
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -260,7 +332,8 @@ const Contact = () => {
                 <CardContent className="p-6">
                   <h3 className="font-bold mb-2">Need Immediate Assistance?</h3>
                   <p className="text-primary-foreground/90 text-sm mb-4">
-                    For urgent technical issues or time-sensitive projects, our priority support team is available.
+                    For urgent technical issues or time-sensitive projects, our
+                    priority support team is available.
                   </p>
                   <Button variant="secondary" size="sm" className="w-full">
                     Priority Support
@@ -276,7 +349,9 @@ const Contact = () => {
       <section className="py-24 bg-muted">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-6">Why Choose AI SOLUTIONS?</h2>
+            <h2 className="text-3xl font-bold mb-6">
+              Why Choose AI SOLUTIONS?
+            </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -286,27 +361,32 @@ const Contact = () => {
               </div>
               <h3 className="text-xl font-semibold mb-4">Fast Response</h3>
               <p className="text-muted-foreground">
-                Get expert consultation within 24 hours of your inquiry submission.
+                Get expert consultation within 24 hours of your inquiry
+                submission.
               </p>
             </div>
-            
+
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6">
                 <Phone className="h-8 w-8 text-primary-foreground" />
               </div>
-              <h3 className="text-xl font-semibold mb-4">Expert Consultation</h3>
+              <h3 className="text-xl font-semibold mb-4">
+                Expert Consultation
+              </h3>
               <p className="text-muted-foreground">
-                Speak directly with AI specialists who understand your industry challenges.
+                Speak directly with AI specialists who understand your industry
+                challenges.
               </p>
             </div>
-            
+
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6">
                 <Mail className="h-8 w-8 text-primary-foreground" />
               </div>
               <h3 className="text-xl font-semibold mb-4">Custom Solutions</h3>
               <p className="text-muted-foreground">
-                Receive tailored proposals designed specifically for your business needs.
+                Receive tailored proposals designed specifically for your
+                business needs.
               </p>
             </div>
           </div>
