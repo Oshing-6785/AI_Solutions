@@ -33,6 +33,15 @@ export default function FeedbackModalEdit({
             onChange={(e) => onChange({ ...feedback, company_name: e.target.value })}
             placeholder="Company"
           />
+
+          <input
+            type="text"
+            className="w-full border rounded px-3 py-2"
+            value={feedback.job_title}
+            onChange={(e) => onChange({ ...feedback, job_title: e.target.value })}
+            placeholder="Company"
+          />
+          
           <input
             type="number"
             className="w-full border rounded px-3 py-2"

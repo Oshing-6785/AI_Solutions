@@ -13,6 +13,14 @@ const feedbackSchema = new mongoose.Schema(
       minlength: [2, "Company name must be at least 2 characters long"],
       maxlength: [30, "Company name must be at most 30 characters long"],
     },
+
+    job_title: {
+    type: String,
+    required: true,
+    minlength: [2, "Job title must be at least 2 characters long"],
+    maxlength: [30, "Job title must be at most 30 characters long"],
+  },
+  
     rating: {
       type: Number,
       required: true,

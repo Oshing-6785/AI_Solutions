@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash, Users, Building, Key, Star } from "lucide-react";
+import { Pencil, Trash, Users, Building, Key, Star, BriefcaseBusiness } from "lucide-react";
 import { Testimonial } from "./types";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
@@ -36,7 +36,7 @@ export default function TestimonialsList({
                 <p className="text-muted-foreground">{testimonial.company_name}</p>
               </div>
               <div className="flex items-center gap-2">
-                <Key className="w-4 h-4 text-muted-foreground" />
+                <BriefcaseBusiness className="w-4 h-4 text-muted-foreground" />
                 <p className="text-muted-foreground italic">{testimonial.job_title}</p>
               </div>
               <div className="flex items-center gap-2">
@@ -69,9 +69,9 @@ export default function TestimonialsList({
               </div>
 
               <div className="flex justify-end gap-2">
-                <Button variant="outline" size="sm" onClick={() => onEdit(testimonial)}>
+                {/* <Button variant="outline" size="sm" onClick={() => onEdit(testimonial)}>
                   <Pencil className="w-4 h-4 mr-1" /> Edit
-                </Button>
+                </Button> */}
                 <Button variant="destructive" size="sm" onClick={() => onDelete(testimonial._id!)}>
                   <Trash className="w-4 h-4 mr-1" /> Delete
                 </Button>

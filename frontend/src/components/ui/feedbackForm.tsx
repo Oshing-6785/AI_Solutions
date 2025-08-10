@@ -12,6 +12,7 @@ const FeedbackForm = () => {
     company_name: "",
     rating: 0,
     comment: "",
+    job_title: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -29,18 +30,28 @@ const FeedbackForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-   
-    if (form.name.length < 3 || form.company_name.length < 2 || form.comment.length < 10) {
+    if (
+      form.name.length < 3 ||
+      form.company_name.length < 2 ||
+      form.comment.length < 10 ||
+      form.job_title.length < 2
+    ) {
       alert("Please ensure all fields meet minimum length requirements.");
       return;
     }
 
     setLoading(true);
     try {
-      const res = await API.post("/feedback/create", form); 
+      const res = await API.post("/feedback/create", form);
       if (res.status === 201) {
         alert("🎉 Feedback submitted successfully!");
-        setForm({ name: "", company_name: "", rating: 0, comment: "" });
+        setForm({
+          name: "",
+          company_name: "",
+          rating: 0,
+          comment: "",
+          job_title: "",
+        });
       }
     } catch (err: any) {
       console.error(
@@ -62,7 +73,8 @@ const FeedbackForm = () => {
               <CardHeader>
                 <CardTitle className="text-2xl">Submit Your Feedback</CardTitle>
                 <p className="text-muted-foreground">
-                  Your feedback for our company is a valuable asset that motivates us.
+                  Your feedback for our company is a valuable asset that
+                  motivates us.
                 </p>
               </CardHeader>
               <CardContent>
@@ -94,6 +106,18 @@ const FeedbackForm = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
+                      <Label htmlFor="job_title">Job Title *</Label>
+                      <Input
+                        id="job_title"
+                        name="job_title"
+                        value={form.job_title}
+                        onChange={handleChange}
+                        placeholder="Enter you job Title"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
                       <Label htmlFor="rating">Rating (0–5) *</Label>
                       <Input
                         id="rating"
@@ -108,7 +132,7 @@ const FeedbackForm = () => {
                       />
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-2 ">
                       <Label htmlFor="comment">Comment *</Label>
                       <textarea
                         id="comment"
@@ -147,8 +171,10 @@ const FeedbackForm = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  AI SOLUTIONS<br />
-                  Sunderland, United Kingdom<br />
+                  AI SOLUTIONS
+                  <br />
+                  Sunderland, United Kingdom
+                  <br />
                   Serving clients globally
                 </p>
               </CardContent>
@@ -163,8 +189,10 @@ const FeedbackForm = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  We respond to all inquiries within 24 hours.<br />
-                  For urgent requests, expect a response within 4 hours during business days.
+                  We respond to all inquiries within 24 hours.
+                  <br />
+                  For urgent requests, expect a response within 4 hours during
+                  business days.
                 </p>
               </CardContent>
             </Card>
@@ -179,15 +207,21 @@ const FeedbackForm = () => {
               <CardContent className="space-y-3">
                 <div>
                   <p className="font-medium">General Inquiries</p>
-                  <p className="text-muted-foreground text-sm">info@ai-solutions.co.uk</p>
+                  <p className="text-muted-foreground text-sm">
+                    info@ai-solutions.co.uk
+                  </p>
                 </div>
                 <div>
                   <p className="font-medium">Technical Support</p>
-                  <p className="text-muted-foreground text-sm">support@ai-solutions.co.uk</p>
+                  <p className="text-muted-foreground text-sm">
+                    support@ai-solutions.co.uk
+                  </p>
                 </div>
                 <div>
                   <p className="font-medium">Partnerships</p>
-                  <p className="text-muted-foreground text-sm">partners@ai-solutions.co.uk</p>
+                  <p className="text-muted-foreground text-sm">
+                    partners@ai-solutions.co.uk
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -196,7 +230,8 @@ const FeedbackForm = () => {
               <CardContent className="p-6">
                 <h3 className="font-bold mb-2">Need Immediate Assistance?</h3>
                 <p className="text-primary-foreground/90 text-sm mb-4">
-                  For urgent technical issues or time-sensitive projects, our priority support team is available.
+                  For urgent technical issues or time-sensitive projects, our
+                  priority support team is available.
                 </p>
                 <Button variant="secondary" size="sm" className="w-full">
                   Priority Support

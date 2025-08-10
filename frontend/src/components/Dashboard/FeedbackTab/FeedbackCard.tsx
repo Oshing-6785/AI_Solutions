@@ -1,7 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Star, Eye, Pencil, Key, Building } from "lucide-react";
+import {
+  Trash2,
+  Star,
+  Eye,
+  Pencil,
+  Key,
+  Building,
+  BriefcaseBusiness,
+} from "lucide-react";
 import { Feedback } from "./types";
 
 interface Props {
@@ -11,7 +19,12 @@ interface Props {
   onDelete: (id: string) => void;
 }
 
-export default function FeedbackCard({ feedback, onView, onEdit, onDelete }: Props) {
+export default function FeedbackCard({
+  feedback,
+  onView,
+  onEdit,
+  onDelete,
+}: Props) {
   return (
     <Card>
       <CardContent className="p-6 space-y-3">
@@ -26,6 +39,10 @@ export default function FeedbackCard({ feedback, onView, onEdit, onDelete }: Pro
               ID: {feedback._id}
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <BriefcaseBusiness className="w-4 h-4" />
+              Job Title:{feedback.job_title}
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Building className="w-4 h-4" />
               {feedback.company_name}
             </div>
@@ -34,20 +51,34 @@ export default function FeedbackCard({ feedback, onView, onEdit, onDelete }: Pro
                 <Star
                   key={i}
                   className={`w-4 h-4 ${
-                    i < feedback.rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"
+                    i < feedback.rating
+                      ? "fill-yellow-400 text-yellow-400"
+                      : "text-muted-foreground"
                   }`}
                 />
               ))}
             </div>
           </div>
           <div className="space-x-2">
-            <Button size="sm" variant="outline" onClick={() => onView(feedback)}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onView(feedback)}
+            >
               <Eye className="w-4 h-4 mr-1" /> View
             </Button>
-            <Button size="sm" variant="outline" onClick={() => onEdit(feedback)}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onEdit(feedback)}
+            >
               <Pencil className="w-4 h-4 mr-1" /> Edit
             </Button>
-            <Button size="sm" variant="outline" onClick={() => onDelete(feedback._id)}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onDelete(feedback._id)}
+            >
               <Trash2 className="w-4 h-4 mr-1" /> Delete
             </Button>
           </div>

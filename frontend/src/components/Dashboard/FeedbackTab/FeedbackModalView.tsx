@@ -14,6 +14,7 @@ export default function FeedbackModalView({ feedback, onClose }: FeedbackModalVi
         <p><strong>ID:</strong> {feedback._id}</p>
         <p><strong>Name:</strong> {feedback.name}</p>
         <p><strong>Company:</strong> {feedback.company_name}</p>
+        <p><strong>Job Title:</strong> {feedback.job_title}</p>
         <p><strong>Rating:</strong> {feedback.rating} / 5</p>
         <p><strong>Comment:</strong> {feedback.comment}</p>
         <p className="text-sm text-muted-foreground">

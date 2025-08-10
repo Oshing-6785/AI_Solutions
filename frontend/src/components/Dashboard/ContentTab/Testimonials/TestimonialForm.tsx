@@ -86,13 +86,13 @@ export default function TestimonialForm({
         required
       />
 
-      {/* <Input
+      <Input
         name="job_title"
         value={formData.job_title || ""}
         onChange={handleChange}
         placeholder="Job Title"
         required
-      /> */}
+      />
 
       <Textarea
         name="comment"
