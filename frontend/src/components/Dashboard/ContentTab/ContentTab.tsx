@@ -5,6 +5,7 @@ import TestimonialsTab from "./Testimonials/TestimonialsTab";
 import SolutionTab from "./Solutions/SolutionTab";
 import IndustryTab from "./Industry/IndustryTab";
 import ProjectTab from "./Projects/ProjectTab"
+import GalleryTab from "./Gallery/GalleryTab";
 
 export default function ContentTab() {
   const [activeContentTab, setActiveContentTab] = useState("home");
@@ -37,6 +38,11 @@ export default function ContentTab() {
       {/* Content Tab : Project Management */}
       <TabsContent value="projects">
         <ProjectTab />
+      </TabsContent>
+
+      {/* Gallery */}
+      <TabsContent value="gallery">
+        <GalleryTab />
       </TabsContent>
 
       {/* Other Tabs Placeholder  */}

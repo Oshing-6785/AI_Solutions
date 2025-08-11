@@ -1,42 +1,67 @@
-const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv").config();
+
+const path = require("path");
 const express = require("express");
-const app = express();
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+
 const connectToDB = require("./db/db");
-connectToDB();
+
 const adminRouter = require("./routes/admin.routes");
 const contactRouter = require("./routes/contact.routes");
 const feedbackRouter = require("./routes/feedback.routes");
 const chatbotRouter = require("./routes/chatBot.routes");
 const postRouter = require("./routes/post.routes");
-const industryRouter = require ("./routes/industry.routes")
-const solutionRouter = require ("./routes/solution.routes")
-const projectRouter = require ("./routes/project.routes")
-const cookieParser = require("cookie-parser");
+const industryRouter = require("./routes/industry.routes");
+const solutionRouter = require("./routes/solution.routes");
+const projectRouter = require("./routes/project.routes");
+const galleryRouter = require("./routes/gallery.routes");
+
+const app = express();
+
+connectToDB();
 
 app.use(cookieParser());
 
-const cors = require("cors");
-app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true,
-}));
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+app.use(
+  cors({
+    origin: CLIENT_ORIGIN,
+    credentials: true,
+  })
+);
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "..", "public", "uploads"))
+);
+
+app.get("/", (_req, res) => {
+  res.send("Hello im responding to client side!");
+});
+
 app.use("/admin", adminRouter);
 app.use("/contact", contactRouter);
 app.use("/feedback", feedbackRouter);
 app.use("/posts", postRouter);
 app.use("/chatbot", chatbotRouter);
-app.use("/industries", industryRouter)
-app.use("/solutions", solutionRouter)
-app.use("/projects", projectRouter)
+app.use("/industries", industryRouter);
+app.use("/solutions", solutionRouter);
+app.use("/projects", projectRouter);
+app.use("/gallery", galleryRouter);
 
+app.use((req, res) => {
+  res.status(404).json({ error: "Route not found" });
+});
 
-
-app.get("/", (req, res) => {
-  res.send("Hello im responding to client side!");
+app.use((err, _req, res, _next) => {
+  const status = err.status || 500;
+  res.status(status).json({
+    error: err.message || "Internal Server Error",
+  });
 });
 
 module.exports = app;
