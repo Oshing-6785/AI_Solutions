@@ -11,6 +11,7 @@ const chatbotRouter = require("./routes/chatBot.routes");
 const postRouter = require("./routes/post.routes");
 const industryRouter = require ("./routes/industry.routes")
 const solutionRouter = require ("./routes/solution.routes")
+const projectRouter = require ("./routes/project.routes")
 const cookieParser = require("cookie-parser");
 
 app.use(cookieParser());
@@ -30,6 +31,7 @@ app.use("/posts", postRouter);
 app.use("/chatbot", chatbotRouter);
 app.use("/industries", industryRouter)
 app.use("/solutions", solutionRouter)
+app.use("/projects", projectRouter)
 
 
 

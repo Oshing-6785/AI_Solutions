@@ -3,11 +3,12 @@ import API from "@/services/api";
 import { Solution } from "./types";
 import { iconMap } from "./iconMap";
 import { Button } from "@/components/ui/button";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, Key } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import FoldableDescription from "./FoldableDescription";
 import FoldableFeatures from "./FoldableFeatures";
+import { Card, CardTitle } from "@/components/ui/card";
 
 interface Props {
   solutions: Solution[];
@@ -41,11 +42,14 @@ const SolutionList: React.FC<Props> = ({
     }
   };
 
-  
   const toggleVisibility = async (id: string, nextIsActive: boolean) => {
     try {
-      await API.patch(`/solutions/${id}/visibility`, { isActive: nextIsActive });
-      toast.success(`Solution ${nextIsActive ? "visible" : "hidden"} successfully`);
+      await API.patch(`/solutions/${id}/visibility`, {
+        isActive: nextIsActive,
+      });
+      toast.success(
+        `Solution ${nextIsActive ? "visible" : "hidden"} successfully`
+      );
       fetchSolutions();
     } catch {
       toast.error("Failed to update visibility");
@@ -55,7 +59,7 @@ const SolutionList: React.FC<Props> = ({
   if (loading) return <p className="text-muted-foreground">Loading...</p>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
       {solutions.map((solution) => {
         const Icon = iconMap[solution.icon];
         return (
@@ -74,12 +78,18 @@ const SolutionList: React.FC<Props> = ({
               )}
             </div>
 
-            <h3 className="text-xl font-semibold mb-2">{solution.title}</h3>
+              <CardTitle className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+                {solution.title}
+              </CardTitle>
+            
 
             <FoldableDescription description={solution.description} />
 
             <div className="space-y-2 mb-6">
-              <h4 className="font-semibold text-sm">Key Features:</h4>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Key className="w-4 h-4" />
+                <h4 className="font-semibold text-sm">Key Features:</h4>
+              </div>
               <FoldableFeatures features={solution.features || []} />
             </div>
 

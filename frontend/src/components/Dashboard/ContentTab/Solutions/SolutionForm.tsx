@@ -19,7 +19,7 @@ import { toast } from "sonner";
 interface Props {
   initialData: Solution | null;
   onClose: () => void;
-  onSuccess?: () => void;  
+  onSuccess?: () => void;
 }
 
 const badgeOptions = ["none", "Popular", "Featured", "New", "Enterprise"];
@@ -36,13 +36,14 @@ const SolutionForm: React.FC<Props> = ({ initialData, onClose, onSuccess }) => {
   });
 
   const [featureInput, setFeatureInput] = useState("");
+  const [customBadge, setCustomBadge] = useState("");
 
   const isEdit = !!initialData;
 
   useEffect(() => {
     if (initialData) {
       setForm(initialData);
-      setFeatureInput(""); 
+      setFeatureInput("");
     }
   }, [initialData]);
 
@@ -81,7 +82,7 @@ const SolutionForm: React.FC<Props> = ({ initialData, onClose, onSuccess }) => {
       } else {
         await API.post("/solutions/create", form);
         toast.success("Solution created");
-        
+
         setForm({
           icon: "Brain",
           title: "",
@@ -94,7 +95,7 @@ const SolutionForm: React.FC<Props> = ({ initialData, onClose, onSuccess }) => {
         setFeatureInput("");
       }
       if (onSuccess) {
-        onSuccess();  
+        onSuccess();
       }
       onClose();
     } catch (error) {
@@ -150,7 +151,7 @@ const SolutionForm: React.FC<Props> = ({ initialData, onClose, onSuccess }) => {
         />
       </div>
 
-      {/* Features - Tag input */}
+      {/* Features  */}
       <div>
         <label className="text-sm font-medium mb-1 block">Features</label>
         <div className="flex flex-wrap gap-2 mb-2 max-h-48 overflow-y-auto border rounded p-2">
@@ -181,27 +182,54 @@ const SolutionForm: React.FC<Props> = ({ initialData, onClose, onSuccess }) => {
 
       {/* Badge */}
       <div>
-        <label className="text-sm font-medium">Badge</label>
-        <Select
-          value={form.badge === "" ? "none" : form.badge}
-          onValueChange={(val) =>
-            setForm((f) => ({
-              ...f,
-              badge: val === "none" ? "" : (val as Solution["badge"]),
-            }))
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select Badge" />
-          </SelectTrigger>
-          <SelectContent>
-            {badgeOptions.map((badge) => (
-              <SelectItem key={badge} value={badge}>
-                {badge === "none" ? "None" : badge}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <label className="text-sm font-medium mb-1 block">Badge</label>
+
+        <div className="flex items-center gap-4">
+          <div className="flex-1 min-w-[150px]">
+            <Select
+              value={
+                form.badge === ""
+                  ? "none"
+                  : badgeOptions.includes(form.badge)
+                  ? form.badge
+                  : "custom"
+              }
+              onValueChange={(val) => {
+                if (val === "custom") {
+                  setForm((f) => ({ ...f, badge: customBadge }));
+                } else if (val === "none") {
+                  setForm((f) => ({ ...f, badge: "" }));
+                } else {
+                  setForm((f) => ({ ...f, badge: val as Solution["badge"] }));
+                }
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Badge" />
+              </SelectTrigger>
+              <SelectContent>
+                {badgeOptions.map((badge) => (
+                  <SelectItem key={badge} value={badge}>
+                    {badge === "none" ? "None" : badge}
+                  </SelectItem>
+                ))}
+                <SelectItem value="custom">Custom</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {form.badge === customBadge && (
+            <Input
+              className="flex-1 min-w-[150px]"
+              placeholder="Type your custom badge"
+              value={customBadge}
+              onChange={(e) => {
+                setCustomBadge(e.target.value);
+                setForm((f) => ({ ...f, badge: e.target.value }));
+              }}
+            />
+          )}
+        </div>
       </div>
 
       {/* Color */}
@@ -231,9 +259,7 @@ const SolutionForm: React.FC<Props> = ({ initialData, onClose, onSuccess }) => {
         <span className="text-sm font-medium">Is Active?</span>
         <Switch
           checked={form.isActive}
-          onCheckedChange={(val) =>
-            setForm((f) => ({ ...f, isActive: val }))
-          }
+          onCheckedChange={(val) => setForm((f) => ({ ...f, isActive: val }))}
         />
       </div>
 

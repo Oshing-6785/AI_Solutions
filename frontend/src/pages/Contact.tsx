@@ -19,6 +19,14 @@ import ChatBot from "@/components/ChatBot";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+type PrefillPayload = {
+  message?: string;
+  title?: string;
+  brief?: string;
+  key_results?: string[];
+  technologies_used?: string[];
+};
+
 const Contact = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
@@ -31,24 +39,43 @@ const Contact = () => {
     message: "",
   });
 
-  const location = useLocation() as {
-    state?: { prefill?: { message?: string } };
-  };
+  const location = useLocation() as { state?: { prefill?: PrefillPayload } };
   const prefilledOnce = useRef(false);
 
+  const buildPrefillMessage = (p: PrefillPayload) => {
+    if (p.message) return p.message;
+
+    const lines: string[] = [];
+    if (p.title) lines.push(`I'm interested in "${p.title}".`, "");
+    if (p.brief) {
+      lines.push("Brief:", p.brief.trim(), "");
+    }
+    if (p.key_results && p.key_results.length) {
+      lines.push("Key results:");
+      p.key_results.forEach((r) => lines.push(`• ${r}`));
+      lines.push(""); 
+    }
+    if (p.technologies_used && p.technologies_used.length) {
+      lines.push("Technologies used:");
+      p.technologies_used.forEach((t) => lines.push(`• ${t}`));
+      lines.push("");
+    }
+    lines.push("Please contact me with pricing, timeline, and implementation details.");
+    return lines.join("\n");
+  };
+
   useEffect(() => {
-    console.log("location.state:", location.state);
     if (prefilledOnce.current) return;
 
     const incoming = location?.state?.prefill;
-    if (incoming?.message) {
-      setFormData((prev) => ({
-        ...prev,
-        message: prev.message || incoming.message, // only set if empty
-      }));
-      prefilledOnce.current = true;
+    if (incoming) {
+      const composed = buildPrefillMessage(incoming).trim();
+      if (composed && !formData.message) {
+        setFormData((prev) => ({ ...prev, message: composed }));
+        prefilledOnce.current = true;
+      }
     }
-  }, [location]);
+  }, [location, formData.message]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,6 +99,7 @@ const Contact = () => {
           job_title: "",
           message: "",
         });
+        prefilledOnce.current = false; 
       } else {
         toast({
           title: "Submission Failed",

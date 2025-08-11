@@ -1,5 +1,3 @@
-// components/FeedbackTab/index.ts
-
 export { default as FeedbackCard } from "./FeedbackCard";
 export { default as FeedbackSearch } from "./FeedbackSearch";
 export { default as RecentFeedbackList } from "./RecentFeedbackList";

@@ -79,7 +79,6 @@ module.exports.toggleVisibility = async (req, res) => {
     }
 
     res.status(200).json({
-      // message: `Solution is now ${isActive ? "visible" : "hidden"}`,
       message: "Feedback approval status updated successfully",
       updated,
     });

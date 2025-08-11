@@ -4,7 +4,7 @@ export interface Solution {
   title: string;
   description: string;
   features: string[];
-  badge?: "" | "Popular" | "Featured" | "New" | "Enterprise";
+  badge?: string
   color: "primary" | "secondary" | "accent";
   isActive?: boolean;
   createdAt?: string;

@@ -10,7 +10,7 @@ import ChatBot from "@/components/ChatBot";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Key } from "lucide-react";
 
 import { iconMap } from "@/components/Dashboard/ContentTab/Solutions/iconMap";
 
@@ -44,7 +44,6 @@ const Solutions = () => {
   const [loadingIndustries, setLoadingIndustries] = useState(true);
   const navigate = useNavigate();
 
-  // Fetch active solutions for public page
   useEffect(() => {
     const fetchSolutions = async () => {
       try {
@@ -59,7 +58,6 @@ const Solutions = () => {
     fetchSolutions();
   }, []);
 
-  // Fetch active industries for public page
   useEffect(() => {
     const fetchIndustries = async () => {
       try {
@@ -147,7 +145,7 @@ const Solutions = () => {
                           </Badge>
                         )}
                       </div>
-                      <CardTitle className="text-xl">
+                      <CardTitle className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors ">
                         {solution.title}
                       </CardTitle>
                     </CardHeader>
@@ -157,7 +155,10 @@ const Solutions = () => {
                         maxLength={160}
                       />
                       <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Key className="w-4 h-4" />
                         <h4 className="font-semibold text-sm">Key Features:</h4>
+                        </div>
                         <FoldableFeatures
                           features={solution.features || []}
                           initialVisibleCount={5}

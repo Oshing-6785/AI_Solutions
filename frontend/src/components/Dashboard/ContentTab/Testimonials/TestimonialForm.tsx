@@ -45,11 +45,9 @@ export default function TestimonialForm({
 
     try {
       if (initialData?._id) {
-        // Update
         await API.put(`/feedback/${initialData._id}`, formData);
         toast.success("Testimonial updated");
       } else {
-        // Create
         await API.post("/feedback/create", formData);
         toast.success("Testimonial added");
       }
